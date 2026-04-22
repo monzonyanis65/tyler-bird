@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.monzonyanis65.twa",
+        "sha256_cert_fingerprints": ["7E:02:28:DE:29:C0:B2:0F:D2:1A:3C:6E:97:B6:45:FF:78:25:F7:90:74:D4:0A:F3:6C:D1:79:6E:4F:32:EC:1E"]
+      }
+    }]

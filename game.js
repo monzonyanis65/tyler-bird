@@ -324,9 +324,23 @@ function draw() {
     ctx.restore();
 }
 
-function gameLoop() {
-    update();
-    draw();
+let lastTime = 0;
+const FPS = 60;
+const frameInterval = 1000 / FPS;
+
+function gameLoop(timestamp) {
+    if (!lastTime) lastTime = timestamp;
+    
+    const elapsed = timestamp - lastTime;
+
+    if (elapsed > frameInterval) {
+        // Adjust lastTime to account for the frame interval
+        lastTime = timestamp - (elapsed % frameInterval);
+        
+        update();
+        draw();
+    }
+    
     requestAnimationFrame(gameLoop);
 }
 
