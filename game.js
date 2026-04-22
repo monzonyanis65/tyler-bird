@@ -118,6 +118,15 @@ function init() {
     startBtn.onclick = startGame;
     restartBtn.onclick = startGame;
 
+    // Pause music if the user leaves the tab or minimizes the app
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            gameOverSound.pause();
+        } else if (gameState === 'GAME_OVER') {
+            gameOverSound.play();
+        }
+    });
+
     requestAnimationFrame(gameLoop);
 }
 
@@ -130,9 +139,6 @@ function resizeCanvas() {
 function handleAction() {
     if (gameState === 'PLAYING') {
         bird.velocity = FLAP;
-    } else if (gameState === 'MENU' || gameState === 'GAME_OVER') {
-        // Handled by buttons, but fallback for space
-        if (gameState === 'GAME_OVER') startGame();
     }
 }
 
