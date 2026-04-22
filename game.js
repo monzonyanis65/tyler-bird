@@ -9,10 +9,11 @@ const bestScoreSpan = document.getElementById('best-score');
 const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
 
-// Game constants
-const GRAVITY = 0.25;
-const FLAP = -4.5;
-const SPAWN_RATE = 120; // frames between towers
+// Game constants (Pixels Per Second)
+const GRAVITY_PPS = 1200;
+const FLAP_PPS = -350;
+const PIPE_SPEED_PPS = 150;
+const SPAWN_RATE_MS = 2000; 
 const PIPE_WIDTH = 60;
 const PIPE_GAP = 160;
 const BIRD_HEIGHT = 60;
@@ -138,7 +139,7 @@ function resizeCanvas() {
 
 function handleAction() {
     if (gameState === 'PLAYING') {
-        bird.velocity = FLAP;
+        bird.velocity = FLAP_PPS;
     }
 }
 
@@ -149,7 +150,7 @@ function startGame() {
     bird.rotation = 0;
     pipes = [];
     score = 0;
-    frameCount = 0;
+    lastSpawnTime = 0;
     gameState = 'PLAYING';
     
     startMenu.classList.add('hidden');
@@ -177,38 +178,34 @@ function gameOver() {
     gameOverSound.play();
 }
 
-function update() {
+function update(dt) {
     if (gameState !== 'PLAYING') return;
 
-    frameCount++;
-
-    // Bird physics
-    bird.velocity += GRAVITY;
-    bird.y += bird.velocity;
+    // Bird physics (Delta Time)
+    bird.velocity += GRAVITY_PPS * dt;
+    bird.y += bird.velocity * dt;
     
     // Rotation based on velocity
-    bird.rotation = Math.min(Math.PI / 4, Math.max(-Math.PI / 4, bird.velocity / 10));
+    bird.rotation = Math.min(Math.PI / 4, Math.max(-Math.PI / 4, bird.velocity / 1000));
 
     // Ground/Ceiling collision
     if (bird.y + bird.height > canvas.height || bird.y < 0) {
         gameOver();
     }
 
-    // Pipe generation
-    if (frameCount % SPAWN_RATE === 0) {
+    // Pipe generation based on time
+    const currentTime = Date.now();
+    if (currentTime - lastSpawnTime > SPAWN_RATE_MS) {
         const gapY = Math.random() * (canvas.height - PIPE_GAP - 100) + 50;
-        pipes.push({
-            x: canvas.width,
-            gapY: gapY,
-            passed: false
-        });
+        pipes.push({ x: canvas.width, gapY: gapY, passed: false });
+        lastSpawnTime = currentTime;
     }
 
-    // Pipe movement and collision
+    // Pipe movement
     pipes.forEach((pipe, index) => {
-        pipe.x -= 2.5;
+        pipe.x -= PIPE_SPEED_PPS * dt;
 
-        // Collision detection
+        // Collision
         if (
             bird.x < pipe.x + PIPE_WIDTH &&
             bird.x + bird.width > pipe.x &&
@@ -217,17 +214,14 @@ function update() {
             gameOver();
         }
 
-        // Score tracking
+        // Score
         if (!pipe.passed && bird.x > pipe.x + PIPE_WIDTH) {
             score++;
             pipe.passed = true;
             scoreDisplay.innerText = score;
         }
 
-        // Remove old pipes
-        if (pipe.x < -PIPE_WIDTH) {
-            pipes.splice(index, 1);
-        }
+        if (pipe.x < -PIPE_WIDTH) pipes.splice(index, 1);
     });
 }
 
@@ -330,23 +324,17 @@ function draw() {
     ctx.restore();
 }
 
-let lastTime = 0;
-const FPS = 60;
-const frameInterval = 1000 / FPS;
-
+let lastTimestamp = 0;
 function gameLoop(timestamp) {
-    if (!lastTime) lastTime = timestamp;
-    
-    const elapsed = timestamp - lastTime;
+    if (!lastTimestamp) lastTimestamp = timestamp;
+    const dt = (timestamp - lastTimestamp) / 1000; // Delta time in seconds
+    lastTimestamp = timestamp;
 
-    if (elapsed > frameInterval) {
-        // Adjust lastTime to account for the frame interval
-        lastTime = timestamp - (elapsed % frameInterval);
-        
-        update();
-        draw();
+    // Only update if dt is reasonable (prevents huge jumps if the tab was backgrounded)
+    if (dt < 0.1) {
+        update(dt);
     }
-    
+    draw();
     requestAnimationFrame(gameLoop);
 }
 
