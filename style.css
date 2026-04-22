@@ -1,0 +1,167 @@
+:root {
+    --yellow: #FCE300;
+    --black: #000000;
+    --dark-gray: #1a1a1a;
+    --light-gray: #333333;
+    --red: #E21406;
+    --font-main: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: default;
+}
+
+body {
+    background-color: var(--black);
+    color: white;
+    font-family: var(--font-main);
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-container {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    max-height: 800px;
+    box-shadow: 0 0 50px rgba(252, 227, 0, 0.1);
+    overflow: hidden;
+    background-color: #000;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* UI Overlay */
+#ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.menu-box {
+    background: rgba(26, 26, 26, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(252, 227, 0, 0.3);
+    padding: 2.5rem;
+    text-align: center;
+    max-width: 85%;
+    pointer-events: auto;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.hidden {
+    display: none !important;
+}
+
+h1 {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 3rem;
+    color: var(--yellow);
+    letter-spacing: -2px;
+    margin-bottom: 0.2rem;
+}
+
+.subtitle {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 4px;
+    color: white;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+}
+
+.instructions {
+    margin-bottom: 2rem;
+    font-size: 0.8rem;
+    color: #888;
+    line-height: 1.6;
+}
+
+.instructions span {
+    color: var(--yellow);
+    font-weight: bold;
+}
+
+button {
+    background: var(--yellow);
+    color: var(--black);
+    border: none;
+    padding: 1rem 2rem;
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: uppercase;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(252, 227, 0, 0.4);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* Score Display */
+#score-display {
+    position: absolute;
+    top: 2rem;
+    font-family: var(--font-mono);
+    font-size: 4rem;
+    font-weight: 800;
+    color: white;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    opacity: 0.9;
+}
+
+/* Game Over Stats */
+h2 {
+    font-family: var(--font-mono);
+    color: var(--red);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.stats {
+    margin-bottom: 2rem;
+    font-family: var(--font-mono);
+}
+
+.stats p {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.stats span {
+    color: var(--yellow);
+    font-weight: bold;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

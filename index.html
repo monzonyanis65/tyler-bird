@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tyler Bird - Trench Edition</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- Menu UI -->
+        <div id="ui-overlay" class="overlay">
+            <div id="start-menu" class="menu-box">
+                <h1>TYLER BIRD</h1>
+                <p class="subtitle">TRENCH EDITION</p>
+                <div class="instructions">
+                    <p>PRESIONA <span>ESPACIO</span> O <span>CLICK</span></p>
+                    <p>PARA ESCAPAR DE DEMA</p>
+                </div>
+                <button id="start-btn">INICIAR REBELIÓN</button>
+            </div>
+
+            <div id="game-over-menu" class="menu-box hidden">
+                <h2>ATRAPADO EN DEMA</h2>
+                <div class="stats">
+                    <p>PUNTUACIÓN: <span id="final-score">0</span></p>
+                    <p>MEJOR: <span id="best-score">0</span></p>
+                </div>
+                <button id="restart-btn">INTENTAR DE NUEVO</button>
+            </div>
+
+            <div id="score-display" class="hidden">0</div>
+        </div>
+    </div>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+    <script src="game.js"></script>
+</body>
+</html>
